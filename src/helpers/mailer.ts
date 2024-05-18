@@ -6,10 +6,11 @@ export const sendEmail = async ({ email, emailType, userId }: any) => {
   try {
     const hashedToken = await bcryptjs.hash(userId.toString(), 10);
     if (emailType === "VERIFY") {
-      await User.findByIdAndUpdate(userId, {
+      const userVerficationTokenDone=await User.findByIdAndUpdate(userId, {
         verifyToken: hashedToken,
         verifyTokenExpire: Date.now() + 3600000,
       });
+      console.log(userVerficationTokenDone);
     } else if (emailType === "RESET") {
       await User.findByIdAndUpdate(userId, {
         forgotPasswordToken: hashedToken,
@@ -20,9 +21,9 @@ export const sendEmail = async ({ email, emailType, userId }: any) => {
       host: "sandbox.smtp.mailtrap.io",
       port: 2525,
       auth: {
-        user: process.env.MAILTRAP_USER, 
-        pass: process.env.MAILTRAP_PASSWORD, 
-      },
+        user: "f6b2d11ac341f9",
+        pass: "0102c0e0344c2a"
+      }
     });
     const mailOptions = {
       from: "ronak@gmail.com",
@@ -44,6 +45,6 @@ export const sendEmail = async ({ email, emailType, userId }: any) => {
     const mailResponse = await transporter.sendMail(mailOptions);
     return mailResponse;
   } catch (error: any) {
-    throw new Error(error.message);
+    throw new Error(error.message + "in sendEmail helper function");
   }
 };

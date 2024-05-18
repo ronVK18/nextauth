@@ -10,7 +10,7 @@ export async function POST(req: NextRequest) {
     const reqBody =await req.json();
     const { username, email, password } = reqBody;
     //Validation
-    console.log(reqBody);
+    // console.log(reqBody);
     const user = await User.findOne({ email: email });
     if (user) {
       return NextResponse.json(
@@ -26,12 +26,13 @@ export async function POST(req: NextRequest) {
       password: hashedPassword,
     });
     const saveUser = await newUser.save();
-    console.log(saveUser);
+    // console.log(saveUser);
 
     //Send Verification mail
     await sendEmail({ email, emailType: "VERIFY", userId: saveUser._id });
     return NextResponse.json({
       message: "User Register successfully",
+      user: saveUser,
       sucess: true,
     });
   } catch (error: any) {
